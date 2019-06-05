@@ -1,0 +1,85 @@
+type Query {
+  users(query: String) :[User!]!
+  posts(query: String) :[Post!]!
+  listOfStrings: [String]
+  getSum(x: Int, y: Int): Int!
+  title: String!
+  price: Float!
+  releaseYear: Int
+  rating: Float
+  inStock: Boolean!
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): User!
+
+  createPost(
+    title: String!
+    published: Boolean!
+    body: String!
+    timestamp: String!
+    author: ID!
+  ): Post!
+
+  deleteUser(id: ID!): User!
+  deletePost(id: ID!): Post!
+
+  updateUser(id: ID!, data: UpdateUserInput!): User!
+  updatePost(id: ID!, data: UpdatePostInput!): Post!
+}
+
+input CreateUserInput {
+  name: String! 
+  email: String! 
+  username: String!
+  address: String!
+  country: String!
+  zipcode: Float!
+  phone: String!
+  website: String
+  company: String!
+  married: Boolean!
+}
+
+input UpdateUserInput {
+  name: String 
+  email: String 
+  username: String
+  address: String
+  country: String
+  zipcode: Float
+  phone: String
+  website: String
+  company: String
+  married: Boolean
+}
+
+input UpdatePostInput {
+  title: String!
+  published: Boolean!
+  body: String!
+}
+
+type User {
+  id: ID,
+  name: String!
+  username: String!
+  email: String!
+  address: String!
+  country: String!
+  zipcode: Float!
+  phone: String!
+  website: String
+  company: String!
+  married: Boolean!
+  posts: [Post!]!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  published: Boolean!
+  body: String!
+  timestamp: String!
+  author: User!
+}
