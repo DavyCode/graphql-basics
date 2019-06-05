@@ -77,7 +77,7 @@ const Mutation =  {
     })
     return deletedUser[0];
   },
-  createPost: (parent, args, {db}, info) => {
+  createPost: (parent, args, { db, pubsub }, info) => {
     const userExist = db.users.some(user => user.id === args.author)
     
     if(!userExist) {
@@ -89,13 +89,25 @@ const Mutation =  {
       ...args
     } 
     db.posts.push(newPost)
+
+    if (args.published) {
+      pubsub.publish('post', {
+        post: {
+          mutation: 'CREATED',
+          data: newPost
+        }
+      })
+    }
+
     return newPost
   },
-  updatePost: (parent, args, { db }, info) => {
+  updatePost: (parent, args, { db, pubsub }, info) => {
     const { id, data} = args;
     const { title, body, published } = data;
+    
     const selectedPost = db.posts.find(post => post.id === id) 
-
+    const originalPost = { ...selectedPost }
+    
     if(!selectedPost) {
       throw new Error("Post not found")
     }
@@ -106,20 +118,62 @@ const Mutation =  {
     if(typeof body === 'string') {
       selectedPost.body = body
     }
-    if(typeof published === 'boolean') {
-      selectedPost.published = published
-    }
 
+    if(typeof published === 'boolean') {
+      selectedPost.published = data.published
+
+      if(originalPost.published && !selectedPost.published) {
+        pubsub.publish('post', {
+          post: {
+            mutation: 'DELETED',
+            data: originalPost
+          }
+        })
+      }
+      else if (!originalPost.published && selectedPost.published) {
+        pubsub.publish('post', {
+          post: {
+            mutation: 'CREATED',
+            data: selectedPost
+          }
+        })
+      }
+    }
+    else if (selectedPost.published) {
+      pubsub.publish('post', {
+        post: {
+          mutation: 'UPDATED',
+          data: selectedPost
+        }
+      })
+    }
+    // pubsub.publish(`updatepost ${selectedPost.id}`, { 
+    //   updatePost: {
+    //     mutation: 'UPDATED',
+    //     data: selectedPost
+    //   } 
+    // })
+    
     return selectedPost
   },
-  deletePost: (parent, args, {db}, info) => {
+  deletePost: (parent, args, {db, pubsub}, info) => {
     const postIndex = db.posts.findIndex(post => post.id === args.id)
-    if(postIndex === -1) {
+    if (postIndex === -1) {
       throw new Error("This post wasnt found!!!")
     }
 
-    const deletedPost = db.posts.splice(postIndex, 1)
-    return deletedPost[0]
+    const [deletedPost] = db.posts.splice(postIndex, 1)
+
+    if(deletedPost.published) {
+      pubsub.publish(`post`,
+      {
+        post: {
+          mutation: 'DELETED',
+          data: deletedPost
+        }
+      })
+    }
+    return deletedPost
   }
 }
 

@@ -1,7 +1,8 @@
-import { GraphQLServer, MockList} from 'graphql-yoga';
+import { GraphQLServer, MockList, PubSub } from 'graphql-yoga';
 import db from './db'
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
+import Subscription from './resolvers/Subscription'
 import User from './resolvers/User'
 import Post from './resolvers/Post'
 
@@ -11,16 +12,20 @@ import Post from './resolvers/Post'
 //   }),
 // }
 
+const pubsub = new PubSub()
+
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers: {
     Query,
     Mutation,
     User,
-    Post
+    Post,
+    Subscription
   },
   context : {
-    db
+    db,
+    pubsub
   }
   // mocks
 })

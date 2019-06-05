@@ -10,6 +10,12 @@ type Query {
   inStock: Boolean!
 }
 
+type Subscription {
+  count: Int!
+  # updatePost(postId: ID!): PostSubscriptionPayload!
+  post: PostSubscriptionPayload!
+}
+
 type Mutation {
   createUser(data: CreateUserInput!): User!
 
@@ -56,7 +62,7 @@ input UpdateUserInput {
 
 input UpdatePostInput {
   title: String!
-  published: Boolean!
+  published: Boolean
   body: String!
 }
 
@@ -82,4 +88,15 @@ type Post {
   body: String!
   timestamp: String!
   author: User!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type PostSubscriptionPayload {
+  mutation: MutationType!
+  data: Post!
 }
