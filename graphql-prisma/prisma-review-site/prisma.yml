@@ -1,0 +1,3 @@
+endpoint: http://localhost:4466/review/default
+datamodel: datamodel.prisma
+databaseType: document
