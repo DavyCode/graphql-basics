@@ -1,18 +1,18 @@
 const Subscription = {
-  count: {
-    subscribe: (parent, args, { pubsub }, info) => {
-      let count = 0
+  // count: {
+  //   subscribe: (parent, args, { pubsub }, info) => {
+  //     let count = 0
 
-      setInterval(() => {
-        count++
-        pubsub.publish('count', {
-          count
-        })
-      }, 3000)
+  //     setInterval(() => {
+  //       count++
+  //       pubsub.publish('count', {
+  //         count
+  //       })
+  //     }, 3000)
 
-      return pubsub.asyncIterator('count')
-    }
-  },
+  //     return pubsub.asyncIterator('count')
+  //   }
+  // },
   // updatePost: {
   //   subscribe: (parent, { postId }, { pubsub, db }, info) => {
   //     const postExist = db.posts.find(post => post.id === postId && post.published)

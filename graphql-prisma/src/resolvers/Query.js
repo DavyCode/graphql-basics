@@ -1,34 +1,46 @@
 const Query =  {
-  users: (parent, args, ctx, info) => {
-    if(!args.query) return ctx.db.users;
+  users: (parent, args, {prisma}, info) => {
+    const opArgs = {}
 
-    return db.users.filter(user => user.name.toLowerCase().includes(args.query.toLowerCase()))
-  },
-  posts: (parent, args, {db}, info) => {
-    if(!args.query) return db.posts;
+    if(args.query) {
+      opArgs.where = {
+        AND: [{
+          name_contains: args.query
+        },{
+          email_contains: args.query
+        }]
+        // OR: [{
+        //   name_contains: args.query
+        // },{
+        //   email_contains: args.query
+        // }]
+      }
+    }
 
-    return db.posts.filter(post => post.body.toLowerCase().includes(args.query.toLowerCase()))
+    return prisma.query.users(opArgs, info)
+  }, 
+  posts: (parent, args, {prisma}, info) => {
+    const opArgs = {};
+
+    if(args.query) {
+      opArgs.where = {
+        title_contains : opArgs.query
+      }
+    }
+
+    return prisma.query.posts(opArgs, info)
   },
-  getSum: (parent, args, ctx, info) => {
-    if(args.x && args.y)
-      return args.x + args.y
-    return 0
-  },
-  title() {
-    return 'Outbox'
-  },
-  price() {
-    return 1000.45
-  },
-  releaseYear() {
-    return 2019
-  },
-  rating() {
-    return 5.6
-  },
-  inStock() {
-    return true
+  comments: (parent, args, {prisma}, info) => {
+    const opArgs = {};
+
+    if(args.query) {
+      opArgs.where = {
+        id : opArgs.query
+      }
+    }
+    return prisma.query.comments(opArgs, info)
   }
+  
 }
 
-export {Query as default}
+export { Query as default }

@@ -1,31 +1,18 @@
 type Query {
   users(query: String) :[User!]!
   posts(query: String) :[Post!]!
-  listOfStrings: [String]
-  getSum(x: Int, y: Int): Int!
-  title: String!
-  price: Float!
-  releaseYear: Int
-  rating: Float
-  inStock: Boolean!
+  comments(query: String) :[Comment!]!
 }
 
 type Subscription {
-  count: Int!
   # updatePost(postId: ID!): PostSubscriptionPayload!
   post: PostSubscriptionPayload!
 }
 
 type Mutation {
   createUser(data: CreateUserInput!): User!
-
-  createPost(
-    title: String!
-    published: Boolean!
-    body: String!
-    timestamp: String!
-    author: ID!
-  ): Post!
+  createPost(data: CreatePostInput!): Post!
+  createComment(data: CreateCommentInput!): Comment!
 
   deleteUser(id: ID!): User!
   deletePost(id: ID!): Post!
@@ -37,27 +24,26 @@ type Mutation {
 input CreateUserInput {
   name: String! 
   email: String! 
-  username: String!
-  address: String!
-  country: String!
-  zipcode: Float!
-  phone: String!
-  website: String
-  company: String!
-  married: Boolean!
+}
+
+input CreatePostInput {
+  title: String!
+  published: Boolean!
+  body: String!
+  author: ID!
+}
+
+input CreateCommentInput {
+  createdAt: String! 
+  text: String!
+  author: ID!
+  post: ID!
 }
 
 input UpdateUserInput {
   name: String 
   email: String 
   username: String
-  address: String
-  country: String
-  zipcode: Float
-  phone: String
-  website: String
-  company: String
-  married: Boolean
 }
 
 input UpdatePostInput {
@@ -69,16 +55,9 @@ input UpdatePostInput {
 type User {
   id: ID,
   name: String!
-  username: String!
   email: String!
-  address: String!
-  country: String!
-  zipcode: Float!
-  phone: String!
-  website: String
-  company: String!
-  married: Boolean!
   posts: [Post!]!
+  comments: [Comment!]!
 }
 
 type Post {
@@ -86,8 +65,16 @@ type Post {
   title: String!
   published: Boolean!
   body: String!
-  timestamp: String!
   author: User!
+  comments: [Comment!]!
+}
+
+type Comment {
+  id: ID!
+  createdAt: String!
+  text: String!
+  author: User!
+  post: Post!
 }
 
 enum MutationType {
