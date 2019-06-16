@@ -6,3 +6,5 @@ datamodel: datamodel.prisma
 
 # Indicates that this Prisma server is based on MongoDB.
 databaseType: document
+
+secret: arizabalaga

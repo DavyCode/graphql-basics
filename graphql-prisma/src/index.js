@@ -1,37 +1,22 @@
 import { GraphQLServer, MockList, PubSub } from 'graphql-yoga';
 import db from './db'
-import Query from './resolvers/Query'
-import Mutation from './resolvers/Mutation'
-import Subscription from './resolvers/Subscription'
-import User from './resolvers/User'
-import Post from './resolvers/Post'
-import Comment from './resolvers/Comment'
 import prisma from './prisma'
-
-// const mocks = {
-//   Query: () => ({
-//     listOfStrings: () => new MockList([2, 6]),
-//   }),
-// }
+import { resolvers, fragmentReplacements } from './resolvers/index'
 
 const pubsub = new PubSub()
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
-  resolvers: {
-    Query,
-    Mutation,
-    User,
-    Post,
-    Comment,
-    Subscription
+  resolvers,
+  context(request) {
+    return {
+      db,
+      pubsub,
+      prisma,
+      request
+    }
   },
-  context : {
-    db,
-    pubsub,
-    prisma
-  }
-  // mocks
+  fragmentReplacements
 })
 
 // const options = {

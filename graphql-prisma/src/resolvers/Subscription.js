@@ -1,37 +1,45 @@
+import getUserId from '../utils/getUserId'
+
 const Subscription = {
-  // count: {
-  //   subscribe: (parent, args, { pubsub }, info) => {
-  //     let count = 0
-
-  //     setInterval(() => {
-  //       count++
-  //       pubsub.publish('count', {
-  //         count
-  //       })
-  //     }, 3000)
-
-  //     return pubsub.asyncIterator('count')
-  //   }
-  // },
-  // updatePost: {
-  //   subscribe: (parent, { postId }, { pubsub, db }, info) => {
-  //     const postExist = db.posts.find(post => post.id === postId && post.published)
-
-  //     if(!postExist) {
-  //       throw new Error("Post not found")
-  //     }
-
-  //     // return pubsub.asyncIterator(`updatepost ${postId}`)
-  //     return pubsub.asyncIterator(`post`)
-  //   }
-    
-  // },
+  comment: {
+    subscribe: (parent, { postId }, { prisma }, info) => {
+      return prisma.subscription.comment({
+        where: {
+          node: {
+            post: {
+              id: postId
+            }
+          }
+        }
+      }, info)
+    }
+  },
   post: {
-    subscribe: (parent, args, { pubsub }, info) => {
-      
-      return pubsub.asyncIterator('post')
+    subscribe: (parent, args, { prisma }, info) => {
+      return prisma.subscription.post({
+        where: {
+          node: {
+            published: true
+          }
+        }
+      }, info)
     }
     
+  },
+  userPosts: {
+    subscribe: (parent, args, { prisma, request }, info) => {
+      const userId = getUserId(request)
+
+      return prisma.subscription.post({
+        where: {
+          node: {
+            author: {
+              id: userId
+            }
+          }
+        }
+      }, info)
+    }
   }
 
   
