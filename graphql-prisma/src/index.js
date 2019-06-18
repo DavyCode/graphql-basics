@@ -1,5 +1,5 @@
-import { GraphQLServer, MockList, PubSub } from 'graphql-yoga';
-import db from './db'
+import { GraphQLServer, PubSub } from 'graphql-yoga';
+// import db from './db'
 import prisma from './prisma'
 import { resolvers, fragmentReplacements } from './resolvers/index'
 
@@ -10,7 +10,6 @@ const server = new GraphQLServer({
   resolvers,
   context(request) {
     return {
-      db,
       pubsub,
       prisma,
       request

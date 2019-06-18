@@ -2,7 +2,11 @@ import getUserId from '../utils/getUserId'
 
 const Query =  {
   users: (parent, args, {prisma}, info) => {
-    const opArgs = {}
+    const opArgs = {
+      first: args.first,
+      skip: args.skip,
+      after: args.after
+    }
 
     // if(args.query) {
     //   opArgs.where = {
@@ -21,11 +25,14 @@ const Query =  {
 
     return prisma.query.users(opArgs, info)
   }, 
-  posts: async (parent, args, {prisma}, info) => {
+  posts: async (parent, args, { prisma }, info) => {
     const opArgs = {
       where: {
         published: true
-      }
+      },
+      first: args.first,
+      skip: args.skip,
+      after: args.after
     };
 
     // if (args.query) {
@@ -37,7 +44,8 @@ const Query =  {
     // }
 
     if(!args.query) {
-      return prisma.query.posts(opArgs, info)
+      let posts = await prisma.query.posts(opArgs, info)
+      return posts
     }
 
     opArgs.where.title_contains = opArgs.query
@@ -55,7 +63,11 @@ const Query =  {
     }, info)
   },
   comments: (parent, args, {prisma}, info) => {
-    const opArgs = {};
+    const opArgs = {
+      first: args.first,
+      skip: args.skip,
+      after: args.after
+    };
 
     if(args.query) {
       opArgs.where = {
@@ -120,7 +132,10 @@ const Query =  {
         author: {
           id: userId
         }
-      }
+      },
+      first: args.first,
+      skip: args.skip,
+      after: args.after
     }
 
     if(!args.query) {

@@ -1,11 +1,11 @@
-import jwt from 'jwt-simple'
+import jwt from 'jsonwebtoken'
 
 const getUserId = (request, requireAuth = true) => {
   const header = request.request ? request.request.headers.authorization : request.connection.context.Authorization
 
   if (header) {
     const token = header.replace('Bearer ', '')
-    const decoded = jwt.decode(token, 'arizabalaga')
+    const decoded = jwt.verify(token, 'arizabalaga')
     return decoded.userId
   }
 

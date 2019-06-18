@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jwt-simple'
+import jwt from 'jsonwebtoken'
 import getUserId from '../utils/getUserId'
 
 const Mutation =  {
@@ -16,6 +16,7 @@ const Mutation =  {
 
     const password = await bcrypt.hash(args.data.password, 10)
 
+    console.log({password})
     const user = await prisma.mutation.createUser({ 
       data: {
         ...args.data,
@@ -23,7 +24,9 @@ const Mutation =  {
       }
     })
 
-    const token = await jwt.encode({ userId: user.id }, "arizabalaga", {expiresIn: '1 hour' })
+    const token = await jwt.sign({ userId: user.id }, "arizabalaga", {expiresIn: '1 hour' })
+    
+    console.log({token})
     return {
       user,
       token

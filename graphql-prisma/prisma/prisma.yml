@@ -4,7 +4,7 @@ endpoint: http://localhost:4466
 # Defines your models, each model is mapped to the database as a collection.
 datamodel: datamodel.prisma
 
-# Indicates that this Prisma server is based on MongoDB.
-databaseType: document
+# # Indicates that this Prisma server is based on MongoDB.
+# datadocumentbaseType: 
 
 secret: arizabalaga
