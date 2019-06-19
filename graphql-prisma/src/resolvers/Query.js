@@ -5,7 +5,8 @@ const Query =  {
     const opArgs = {
       first: args.first,
       skip: args.skip,
-      after: args.after
+      after: args.after,
+      orderBy: args.orderBy
     }
 
     // if(args.query) {
@@ -32,7 +33,8 @@ const Query =  {
       },
       first: args.first,
       skip: args.skip,
-      after: args.after
+      after: args.after,
+      orderBy: args.orderBy
     };
 
     // if (args.query) {
@@ -66,7 +68,8 @@ const Query =  {
     const opArgs = {
       first: args.first,
       skip: args.skip,
-      after: args.after
+      after: args.after,
+      orderBy: args.orderBy
     };
 
     if(args.query) {
@@ -76,7 +79,7 @@ const Query =  {
     }
     return prisma.query.comments(opArgs, info)
   },
-  post: async (parent, args, { prisma, request }, info) => {
+  post: async (parent, args, { prisma, request }, info) => {  //todo refactor
     const userId = getUserId(request, false)
 
     // const post = await prisma.query.posts({ // OR operator is currently not supported on document DB
@@ -135,7 +138,8 @@ const Query =  {
       },
       first: args.first,
       skip: args.skip,
-      after: args.after
+      after: args.after,
+      orderBy: args.orderBy
     }
 
     if(!args.query) {

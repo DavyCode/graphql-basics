@@ -1,3 +1,4 @@
+import '@babel/polyfill'
 import { GraphQLServer, PubSub } from 'graphql-yoga';
 // import db from './db'
 import prisma from './prisma'
@@ -18,14 +19,14 @@ const server = new GraphQLServer({
   fragmentReplacements
 })
 
-// const options = {
-//   port: 8000,
-//   endpoint: '/graphql',
-//   subscriptions: '/subscriptions',
-//   playground: '/playground',
-// }
+const options = {
+  port: 8000,
+  endpoint: '/graphql',
+  subscriptions: '/subscriptions',
+  playground: '/playground',
+}
 
-server.start({port: 3000}, ({ port }) => {
+server.start({port: process.env.PORT || 3000 }, ({ port }) => {
   console.log(
     `Server started, listening on port ${port} for incoming requests.`,
   )

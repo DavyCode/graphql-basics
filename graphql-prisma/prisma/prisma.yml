@@ -1,10 +1,7 @@
 # Specifies the HTTP endpoint of your Prisma API.
-endpoint: http://localhost:4466
+endpoint: ${env:PRISMA_ENDPOINT}
 
 # Defines your models, each model is mapped to the database as a collection.
 datamodel: datamodel.prisma
-
-# # Indicates that this Prisma server is based on MongoDB.
-# datadocumentbaseType: 
-
-secret: arizabalaga
+# prisma secret
+secret: ${env:SECRET_TOKEN}

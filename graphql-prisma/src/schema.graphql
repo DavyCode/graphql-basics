@@ -1,10 +1,12 @@
+#import UserOrderByInput, PostOrderByInput, CommentOrderByInput from './generated/prisma.graphql'
+
 type Query {
-  users(query: String, skip: Int, first: Int, after: String) :[User!]!
-  posts(query: String, skip: Int, first: Int, after: String) :[Post!]!
-  comments(query: String, skip: Int, first: Int, after: String) :[Comment!]!
+  users(query: String, skip: Int, first: Int, after: String, orderBy: UserOrderByInput) :[User!]!
+  posts(query: String, skip: Int, first: Int, after: String, orderBy: PostOrderByInput) :[Post!]!
+  comments(query: String, skip: Int, first: Int, after: String, orderBy: CommentOrderByInput) :[Comment!]!
   post(id: ID!): Post!
   currentUser: User!
-  userPosts(query: String, skip: Int, first: Int, after: String): [Post!]!
+  userPosts(query: String, skip: Int, first: Int, after: String, orderBy: PostOrderByInput): [Post!]!
 }
 
 type Subscription {
